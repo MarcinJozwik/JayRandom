@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace JayTools.JayRandom
 {
@@ -18,16 +19,25 @@ namespace JayTools.JayRandom
 
         private Texture2D noiseTex;
         private Color[] pix;
-        private Renderer rend;
+        
+        public bool mode2D = true;
 
         void Start()
         {
-            rend = GetComponent<Renderer>();
-
             // Set up the texture and a Color array to hold pixels during processing.
             noiseTex = new Texture2D(pixWidth, pixHeight);
             pix = new Color[noiseTex.width * noiseTex.height];
-            rend.material.mainTexture = noiseTex;
+            
+            if (mode2D)
+            {
+                RawImage rawImage = GetComponent<RawImage>();
+                rawImage.texture = noiseTex;
+            }
+            else
+            {
+                Renderer rend = GetComponent<Renderer>();
+                rend.material.mainTexture = noiseTex;
+            }
         }
 
         void CalcNoise()
@@ -40,8 +50,8 @@ namespace JayTools.JayRandom
                 float x = 0.0F;
                 while (x < noiseTex.width)
                 {
-                    float xCoord = xOrg + x / noiseTex.width * scale;
-                    float yCoord = yOrg + y / noiseTex.height * scale;
+                    float xCoord = xOrg + (x + Time.time * 50f) / noiseTex.width * scale;// * Mathf.Sin(Time.time);
+                    float yCoord = yOrg + (y + Time.time * 50f) / noiseTex.height * scale;// * Mathf.Sin(Time.time);
                     float sample = Mathf.PerlinNoise(xCoord, yCoord);
                     pix[(int)y * noiseTex.width + (int)x] = new Color(sample, sample, sample);
                     x++;

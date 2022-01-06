@@ -1,9 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace JayTools.JayRandom
 {
     public class GeneratePerlinCubes : MonoBehaviour
     {
+        [SerializeField] 
+        private float repeatRate = 3f;
+        
         private GameObject parent;
         public GameObject CubePrefab;
         public GameObject CenterCubePrefab;
@@ -23,20 +27,40 @@ namespace JayTools.JayRandom
         
             Generate();
         
-            InvokeRepeating("Generate", 1f, 3f);
+            InvokeRepeating(nameof(Generate), 1f, repeatRate);
         }
 
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                Generate();
+                // Generate();
+                DrawSample();
             }
         }
 
-        public void InstantiateCubes()
+        private void DrawSample()
         {
-            parent = new GameObject("Parent");
+            int initialOffset = JayRandom.Random(0, 10000);
+            int index = 0;
+            
+            for (int i = 0; i < Size.x; i++)
+            {
+                for (int j = 0; j < Size.y; j++)
+                {
+                    for (int k = 0; k < Size.z; k++)
+                    {
+                        float sample = Mathf.PerlinNoise(index + Time.time, 0);
+                        Debug.Log(sample);
+                        index++;
+                    }
+                }
+            }
+        }
+
+        private void InstantiateCubes()
+        {
+            parent = new GameObject("CubesContainer");
             int length = Size.x * Size.y * Size.z;
             cubes = new GameObject[length];
             centralCube = Instantiate(CenterCubePrefab, parent.transform);
@@ -49,18 +73,19 @@ namespace JayTools.JayRandom
 
         public void Generate()
         {
-            Color leftColor = DrawColor();
-            Color rightColor = DrawColor();
+            int[] numbers = JayRandom.UniqueRandom(0, 7, 2);
+            Color leftColor = GetColor(numbers[0]);
+            Color rightColor = GetColor(numbers[1]);
 
             float frequency = JayRandom.Random(0.3f, 3f);
             float amplitude = JayRandom.Random(0.2f, 2f);
 
-            float scaleMax = JayRandom.Random(0.4f, 3f);
-        
-            int initialOffset = JayRandom.Random(0, 10000);
+            float scaleMax = JayRandom.Random(1f, 3f);
+
+            float initialOffset = JayRandom.Random01();
             int index = 0;
         
-            centralCube.transform.position = StartPosition + new Vector3((Size.x / 2) * Offset.x, (Size.y / 2) * Offset.y, (Size.z / 2) * Offset.z);
+            centralCube.transform.position = StartPosition + new Vector3((Size.x / 2f) * Offset.x, (Size.y / 2f) * Offset.y, (Size.z / 2f) * Offset.z);
         
             for (int i = 0; i < Size.x; i++)
             {
@@ -70,10 +95,14 @@ namespace JayTools.JayRandom
                     {
                         GameObject cube = cubes[index];
                         cube.transform.position = StartPosition + new Vector3(i * Offset.x, j * Offset.y, k * Offset.z);
-                        float sample = (float)perlin.perlin(initialOffset + i / Size.x,initialOffset + j / Size.y,initialOffset + k / Size.z);
+                        
+                        // float sample = (float)perlin.perlin(initialOffset + i / Size.x,initialOffset + j / Size.y,initialOffset + k / Size.z);
+                        float sample = Mathf.PerlinNoise(initialOffset + (index * 1f) / (Size.x* Size.y * Size.z), 0);
                         Debug.Log(sample);
-                        cube.transform.localScale = Vector3.one * JayRandom.Map(sample, 0f, 1f,0.05f, scaleMax);
+                        // Debug.Log($"{leftColor}, {rightColor}");
+                        cube.transform.localScale = Vector3.one * JayRandom.Map(sample, 0f, 1f,0.25f, scaleMax);
                         cube.GetComponent<Renderer>().material.color = leftColor + sample * (rightColor - leftColor);
+                        
                         var perlinBounce = cube.GetComponent<PerlinBounce>();
                         perlinBounce.InitialOffset = index * 1000;
                         perlinBounce.frequency = frequency;
@@ -86,7 +115,12 @@ namespace JayTools.JayRandom
 
         public Color DrawColor()
         {
-            switch (JayRandom.Random(0,8))
+            return GetColor(JayRandom.Random(0, 8));
+        }
+        
+        public Color GetColor(int index)
+        {
+            switch (index)
             {
                 case 0:
                     return Color.red;
