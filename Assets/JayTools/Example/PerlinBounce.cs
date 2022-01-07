@@ -17,10 +17,17 @@ namespace JayTools.JayRandom
         private Vector3 basePosition;
         private Perlin perlin;
 
+        public bool RandomInitialOffset = false;
+
         private void Start()
         {
             basePosition = transform.position;
             perlin = new Perlin();
+
+            if (RandomInitialOffset)
+            {
+                InitialOffset = JayRandom.Random01();
+            }
         }
 
         void Update()
@@ -28,6 +35,11 @@ namespace JayTools.JayRandom
             double value = perlin.perlin(InitialOffset + Time.time * frequency, InitialOffset + Time.time * frequency, InitialOffset + Time.time * frequency);
             float height = amplitude * (float)value;
             transform.position = basePosition + new Vector3(height,height,height);
+        }
+
+        public void SetBasePosition(Vector3 position)
+        {
+            basePosition = position;
         }
     }
 }
