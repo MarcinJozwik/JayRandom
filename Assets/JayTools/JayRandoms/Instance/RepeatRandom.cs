@@ -1,7 +1,8 @@
 ﻿using System;
+using JayTools.JayRandoms.Service;
 using UnityEngine.Assertions;
 
-namespace JayTools.JayRandom
+namespace JayTools.JayRandoms.Instance
 {
     /// <summary>
     /// A random class used for multiple item drawing from the same collection.

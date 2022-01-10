@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using JayTools.JayRandoms;
+using JayTools.JayRandoms.Static;
+using UnityEngine;
 
-namespace JayTools.JayRandom
+namespace JayTools.Example
 {
     public class PerlinBounce : MonoBehaviour
     {
@@ -32,7 +34,7 @@ namespace JayTools.JayRandom
 
         void Update()
         {
-            double value = perlin.perlin(InitialOffset + Time.time * frequency, InitialOffset + Time.time * frequency, InitialOffset + Time.time * frequency);
+            double value = perlin.GetPerlin(InitialOffset + Time.time * frequency, InitialOffset + Time.time * frequency, InitialOffset + Time.time * frequency);
             float height = amplitude * (float)value;
             transform.position = basePosition + new Vector3(height,height,height);
         }

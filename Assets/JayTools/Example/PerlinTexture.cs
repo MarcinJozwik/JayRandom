@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace JayTools.JayRandom
+namespace JayTools.Example
 {
     public class PerlinTexture : MonoBehaviour
     {

@@ -1,6 +1,6 @@
-﻿namespace JayTools.JayRandom
+﻿namespace JayTools.JayRandoms.Service
 {
-    public partial class JayRandom
+    public interface IRandomCoreService
     {
         /// <summary>
         /// Internal method for getting random integer number.
@@ -10,10 +10,7 @@
         /// <param name="min"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        private static int RandomRange(int min, int max)
-        {
-            return UnityEngine.Random.Range(min, max);
-        }
+        int RandomRange(int min, int max);
 
         /// <summary>
         /// Internal method for getting random float number.
@@ -23,9 +20,6 @@
         /// <param name="min"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        private static float RandomRange(float min, float max)
-        {
-            return UnityEngine.Random.Range(min, max);
-        }
+        float RandomRange(float min, float max);
     }
 }

@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using JayTools.JayRandoms;
+using UnityEngine;
 
-namespace JayTools.JayRandom
+namespace JayTools.Example
 {
     public class PerlinNoise : MonoBehaviour
     {
@@ -24,7 +25,7 @@ namespace JayTools.JayRandom
         void Update()
         {
             var perlin = new Perlin();
-            double value = perlin.perlin(InitialOffset + Time.time * xScale, 0f, 0f);
+            double value = perlin.GetPerlin(InitialOffset + Time.time * xScale, 0f, 0f);
             // float height = heightScale * Mathf.PerlinNoise(InitialOffset + Time.time * xScale, InitialOffset + Time.time * xScale);
             float height = heightScale * (float)value;
             Vector3 pos = transform.position;

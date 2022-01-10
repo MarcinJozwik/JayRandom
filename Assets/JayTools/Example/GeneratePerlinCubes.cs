@@ -1,7 +1,8 @@
-﻿using System;
+﻿using JayTools.JayRandoms;
+using JayTools.JayRandoms.Static;
 using UnityEngine;
 
-namespace JayTools.JayRandom
+namespace JayTools.Example
 {
     public class GeneratePerlinCubes : MonoBehaviour
     {

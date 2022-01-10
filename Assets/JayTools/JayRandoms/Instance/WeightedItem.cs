@@ -1,4 +1,4 @@
-﻿namespace JayTools.JayRandom
+﻿namespace JayTools.JayRandoms.Instance
 {
     /// <summary>
     /// Helper class used for storing data during Weight Random calculations.

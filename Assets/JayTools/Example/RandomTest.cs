@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using JayTools.JayRandoms.Instance;
+using UnityEngine;
 
-namespace JayTools.JayRandom
+namespace JayTools.Example
 {
     public class RandomTest : MonoBehaviour
     {

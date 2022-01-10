@@ -2,7 +2,7 @@
 using System.Text;
 using UnityEngine;
 
-namespace JayTools.JayRandom
+namespace JayTools.JayRandoms.Instance
 {
     /// <summary>
     /// An random class for drawing items from a collection based on the item's relative weight.
@@ -156,7 +156,8 @@ namespace JayTools.JayRandom
                 return -1;
             }
             
-            int random = JayRandom.Random(0, totalWeight);
+            int random = Static.JayRandom.Random(0, totalWeight);
+            
             for (var i = 0; i < items.Count; i++)
             {
                 random -= items[i].Weight;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace JayTools.JayRandom
+namespace JayTools.JayRandoms.Instance
 {
     /// <summary>
     /// Draws an item from the collection and excludes the item from it until all the items are drawn.
