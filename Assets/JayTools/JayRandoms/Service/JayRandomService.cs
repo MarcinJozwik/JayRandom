@@ -13,10 +13,12 @@ namespace JayTools.JayRandoms.Service
     public class JayRandomService : IRandomService
     {
         private readonly IRandomCoreService randomCoreService;
+        private readonly PerlinNoise perlinNoise;
 
         public JayRandomService(IRandomCoreService randomCoreService)
         {
             this.randomCoreService = randomCoreService;
+            perlinNoise = new PerlinNoise();
         }
         
         public float Random(float min, float max)
@@ -113,6 +115,18 @@ namespace JayTools.JayRandoms.Service
             }
 
             return result.ToArray();
+        }
+
+        public float PerlinNoise(float x, float y, float z, int repeat = -1)
+        {
+            perlinNoise.repeat = repeat;
+            return (float) perlinNoise.Perlin(x, y, z);
+        }
+
+        public float OctavePerlinNoise(float x, float y, float z, int octaves, float persistence, int repeat = -1)
+        {
+            perlinNoise.repeat = repeat;
+            return (float) perlinNoise.OctavePerlin(x, y, z, octaves, persistence);
         }
     }
 }

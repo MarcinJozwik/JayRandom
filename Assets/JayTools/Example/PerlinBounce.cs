@@ -17,14 +17,12 @@ namespace JayTools.Example
         public float frequency = 1.0f;
     
         private Vector3 basePosition;
-        private Perlin perlin;
 
         public bool RandomInitialOffset = false;
 
         private void Start()
         {
             basePosition = transform.position;
-            perlin = new Perlin();
 
             if (RandomInitialOffset)
             {
@@ -34,7 +32,7 @@ namespace JayTools.Example
 
         void Update()
         {
-            double value = perlin.GetPerlin(InitialOffset + Time.time * frequency, InitialOffset + Time.time * frequency, InitialOffset + Time.time * frequency);
+            double value = JayRandom.PerlinNoise(InitialOffset + Time.time * frequency, InitialOffset + Time.time * frequency, InitialOffset + Time.time * frequency);
             float height = amplitude * (float)value;
             transform.position = basePosition + new Vector3(height,height,height);
         }

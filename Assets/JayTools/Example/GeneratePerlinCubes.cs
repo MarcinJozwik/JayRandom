@@ -1,5 +1,4 @@
-﻿using JayTools.JayRandoms;
-using JayTools.JayRandoms.Static;
+﻿using JayTools.JayRandoms.Static;
 using UnityEngine;
 
 namespace JayTools.Example
@@ -18,12 +17,9 @@ namespace JayTools.Example
 
         private GameObject[] cubes;
         private GameObject centralCube;
-        private Perlin perlin;
     
         void Start()
         {
-            perlin = new Perlin();
-
             InstantiateCubes();
         
             Generate();
@@ -98,7 +94,7 @@ namespace JayTools.Example
                         cube.transform.position = StartPosition + new Vector3(i * Offset.x, j * Offset.y, k * Offset.z);
                         
                         // float sample = (float)perlin.perlin(initialOffset + i / Size.x,initialOffset + j / Size.y,initialOffset + k / Size.z);
-                        float sample = Mathf.PerlinNoise(initialOffset + (index * 1f) / (Size.x* Size.y * Size.z), 0);
+                        float sample = JayRandom.PerlinNoise(initialOffset + (index * 1f) / (Size.x* Size.y * Size.z), 0f, 0f);
                         Debug.Log(sample);
                         // Debug.Log($"{leftColor}, {rightColor}");
                         cube.transform.localScale = Vector3.one * JayRandom.Map(sample, 0f, 1f,0.25f, scaleMax);

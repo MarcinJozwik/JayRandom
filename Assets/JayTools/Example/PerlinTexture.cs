@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using JayTools.JayRandoms.Static;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace JayTools.Example
@@ -52,7 +53,7 @@ namespace JayTools.Example
                 {
                     float xCoord = xOrg + (x + Time.time * 50f) / noiseTex.width * scale;// * Mathf.Sin(Time.time);
                     float yCoord = yOrg + (y + Time.time * 50f) / noiseTex.height * scale;// * Mathf.Sin(Time.time);
-                    float sample = Mathf.PerlinNoise(xCoord, yCoord);
+                    float sample = JayRandom.PerlinNoise(xCoord, yCoord,0f);
                     pix[(int)y * noiseTex.width + (int)x] = new Color(sample, sample, sample);
                     x++;
                 }

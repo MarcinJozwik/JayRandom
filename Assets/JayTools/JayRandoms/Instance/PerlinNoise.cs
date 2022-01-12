@@ -2,11 +2,11 @@
 {
     // Based on: https://gist.github.com/Flafla2/f0260a861be0ebdeef76
     // A slightly modified implementation of Ken Perlin's improved noise that allows for tiling the noise arbitrarily.
-    public class Perlin
+    public class PerlinNoise
     {
         public int repeat;
 
-        public Perlin(int repeat = -1)
+        public PerlinNoise(int repeat = -1)
         {
             this.repeat = repeat;
         }
@@ -19,7 +19,7 @@
             double maxValue = 0; // Used for normalizing result to 0.0 - 1.0
             for (int i = 0; i < octaves; i++)
             {
-                total += GetPerlin(x * frequency, y * frequency, z * frequency) * amplitude;
+                total += Perlin(x * frequency, y * frequency, z * frequency) * amplitude;
 
                 maxValue += amplitude;
 
@@ -62,7 +62,7 @@
 
         private static readonly int[] p; // Doubled permutation to avoid overflow
 
-        static Perlin()
+        static PerlinNoise()
         {
             p = new int[512];
             for (int x = 0; x < 512; x++)
@@ -71,7 +71,8 @@
             }
         }
 
-        public double GetPerlin(double x, double y, double z)
+        // returns number between 0 - 1
+        public double Perlin(double x, double y, double z)
         {
             if (repeat > 0)
             {
@@ -99,33 +100,33 @@
 
             int aaa, aba, aab, abb, baa, bba, bab, bbb;
             aaa = p[p[p[xi] + yi] + zi];
-            aba = p[p[p[xi] + Inc(yi)] + zi];
-            aab = p[p[p[xi] + yi] + Inc(zi)];
-            abb = p[p[p[xi] + Inc(yi)] + Inc(zi)];
-            baa = p[p[p[Inc(xi)] + yi] + zi];
-            bba = p[p[p[Inc(xi)] + Inc(yi)] + zi];
-            bab = p[p[p[Inc(xi)] + yi] + Inc(zi)];
-            bbb = p[p[p[Inc(xi)] + Inc(yi)] + Inc(zi)];
+            aba = p[p[p[xi] + Increment(yi)] + zi];
+            aab = p[p[p[xi] + yi] + Increment(zi)];
+            abb = p[p[p[xi] + Increment(yi)] + Increment(zi)];
+            baa = p[p[p[Increment(xi)] + yi] + zi];
+            bba = p[p[p[Increment(xi)] + Increment(yi)] + zi];
+            bab = p[p[p[Increment(xi)] + yi] + Increment(zi)];
+            bbb = p[p[p[Increment(xi)] + Increment(yi)] + Increment(zi)];
 
             double x1, x2, y1, y2;
             x1 = Lerp(
-                Grad(aaa, xf, yf,
+                Gradient(aaa, xf, yf,
                     zf), // The gradient function calculates the dot product between a pseudorandom
-                Grad(baa, xf - 1, yf,
+                Gradient(baa, xf - 1, yf,
                     zf), // gradient vector and the vector from the input coordinate to the 8
                 u); // surrounding points in its unit cube.
             x2 = Lerp(
-                Grad(aba, xf, yf - 1,
+                Gradient(aba, xf, yf - 1,
                     zf), // This is all then lerped together as a sort of weighted average based on the faded (u,v,w)
-                Grad(bba, xf - 1, yf - 1, zf), // values we made earlier.
+                Gradient(bba, xf - 1, yf - 1, zf), // values we made earlier.
                 u);
             y1 = Lerp(x1, x2, v);
 
-            x1 = Lerp(Grad(aab, xf, yf, zf - 1),
-                Grad(bab, xf - 1, yf, zf - 1),
+            x1 = Lerp(Gradient(aab, xf, yf, zf - 1),
+                Gradient(bab, xf - 1, yf, zf - 1),
                 u);
-            x2 = Lerp(Grad(abb, xf, yf - 1, zf - 1),
-                Grad(bbb, xf - 1, yf - 1, zf - 1),
+            x2 = Lerp(Gradient(abb, xf, yf - 1, zf - 1),
+                Gradient(bbb, xf - 1, yf - 1, zf - 1),
                 u);
             y2 = Lerp(x1, x2, v);
 
@@ -134,7 +135,7 @@
                 2; // For convenience we bound it to 0 - 1 (theoretical min/max before is -1 - 1)
         }
 
-        public int Inc(int num)
+        private int Increment(int num)
         {
             num++;
             if (repeat > 0) num %= repeat;
@@ -142,7 +143,7 @@
             return num;
         }
 
-        public static double Grad(int hash, double x, double y, double z)
+        private static double Gradient(int hash, double x, double y, double z)
         {
             int h = hash & 15; // Take the hashed value and take the first 4 bits of it (15 == 0b1111)
             double u = h < 8 /* 0b1000 */
@@ -168,7 +169,7 @@
                 ); // Use the last 2 bits to decide if u and v are positive or negative.  Then return their addition.
         }
 
-        public static double Fade(double t)
+        private static double Fade(double t)
         {
             // Fade function as defined by Ken Perlin.  This eases coordinate values
             // so that they will "ease" towards integral values.  This ends up smoothing
@@ -176,7 +177,7 @@
             return t * t * t * (t * (t * 6 - 15) + 10); // 6t^5 - 15t^4 + 10t^3
         }
 
-        public static double Lerp(double a, double b, double x)
+        private static double Lerp(double a, double b, double x)
         {
             return a + x * (b - a);
         }

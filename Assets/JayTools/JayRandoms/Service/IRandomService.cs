@@ -91,5 +91,27 @@ namespace JayTools.JayRandoms.Service
         /// <param name="amount">How many numbers to return.</param>
         /// <returns></returns>
         int[] UniqueRandom(int min, int max, int amount);
+
+        /// <summary>
+        /// Returns [0, 1] number from Improved Perlin Noise Algorithm. 
+        /// </summary>
+        /// <param name="x">Value in the X axis. The lower the difference between next values, the smoother result.</param>
+        /// <param name="y">Value in the X axis. The lower the difference between next values, the smoother result.</param>
+        /// <param name="z">Value in the X axis. The lower the difference between next values, the smoother result.</param>
+        /// <param name="repeat">Make input coordinates overflow if they are over the repeat variable.</param>
+        /// <returns></returns>
+        float PerlinNoise(float x, float y, float z, int repeat = -1);
+
+        /// <summary>
+        /// Returns [0, 1] number from Improved Perlin Noise Algorithm using Octaves. 
+        /// </summary>
+        /// <param name="x">Value in the X axis. The lower the difference between next values, the smoother result.</param>
+        /// <param name="y">Value in the X axis. The lower the difference between next values, the smoother result.</param>
+        /// <param name="z">Value in the X axis. The lower the difference between next values, the smoother result.</param>
+        /// <param name="octaves">Number of sets of noise. Each successive octave has less and less influence on the final result.</param>
+        /// <param name="persistence">How much influence each successive octave have, quantitatively.</param>
+        /// <param name="repeat">Make input coordinates overflow if they are over the repeat variable.</param>
+        /// <returns></returns>
+        float OctavePerlinNoise(float x, float y, float z, int octaves, float persistence, int repeat = -1);
     }
 }

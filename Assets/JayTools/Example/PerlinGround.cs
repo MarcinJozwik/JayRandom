@@ -19,12 +19,8 @@ namespace JayTools.Example
         public float MaxHeight;
 
         private GameObject[,] cubes;
-        private Perlin perlin;
-    
         void Start()
         {
-            perlin = new Perlin();
-
             InstantiateCubes();
             Randomize();
         
@@ -34,7 +30,6 @@ namespace JayTools.Example
         private void InstantiateCubes()
         {
             parent = new GameObject("CubesContainer");
-            int length = Size.x * Size.y;
             cubes = new GameObject[Size.x,Size.y];
 
             for (int i = 0; i < Size.x; i++)
@@ -62,10 +57,10 @@ namespace JayTools.Example
                 for (int j = 0; j < Size.y; j++)
                 {
                     GameObject cube = cubes[i,j];
-                    float sample = (float)perlin.GetPerlin(initialOffsetColor + ((i * 1f)/ Size.x), initialOffsetColor + ((j * 1f)/ Size.y), 0f);
+                    float sample = JayRandom.PerlinNoise(initialOffsetColor + ((i * 1f)/ Size.x), initialOffsetColor + ((j * 1f)/ Size.y), 0f);
                     cube.GetComponent<Renderer>().material.color = leftColor + sample * (rightColor - leftColor);
 
-                    sample = (float)perlin.GetPerlin(initialOffsetHeight + ((i * 1f)/ Size.x), initialOffsetHeight + ((j * 1f)/ Size.y), 0f);
+                    sample = JayRandom.PerlinNoise(initialOffsetHeight + ((i * 1f)/ Size.x), initialOffsetHeight + ((j * 1f)/ Size.y), 0f);
                     float newHeight = StartPosition.y + MinHeight + (MaxHeight - MinHeight) * sample;
             
                     Vector3 currentPosition = cube.transform.position;

@@ -1,9 +1,10 @@
 ﻿using JayTools.JayRandoms;
+using JayTools.JayRandoms.Static;
 using UnityEngine;
 
 namespace JayTools.Example
 {
-    public class PerlinNoise : MonoBehaviour
+    public class PerlinFloating : MonoBehaviour
     {
         // "Bobbing" animation from 1D Perlin noise.
 
@@ -24,9 +25,7 @@ namespace JayTools.Example
 
         void Update()
         {
-            var perlin = new Perlin();
-            double value = perlin.GetPerlin(InitialOffset + Time.time * xScale, 0f, 0f);
-            // float height = heightScale * Mathf.PerlinNoise(InitialOffset + Time.time * xScale, InitialOffset + Time.time * xScale);
+            double value = JayRandom.PerlinNoise(InitialOffset + Time.time * xScale, 0f, 0f);
             float height = heightScale * (float)value;
             Vector3 pos = transform.position;
             pos.y = baseHeight + height;
