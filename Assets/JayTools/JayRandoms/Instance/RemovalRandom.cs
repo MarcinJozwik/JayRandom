@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace JayTools.JayRandoms.Instance
 {
     /// <summary>
     /// Draws an item from the collection and excludes the item from it until all the items are drawn.
     /// When all the items are drawn, they become available for drawing again.
+    /// Doesn't change the original collection.
+    /// The original collection shouldn't be changed outside the Removal Random class.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class RemovalRandom<T> : IRandomDraw<T>
@@ -31,6 +35,13 @@ namespace JayTools.JayRandoms.Instance
         /// <returns></returns>
         public T Draw()
         {
+            if (collection.Count != usedIndexes.Length)
+            {
+                Exception exception = new Exception("The original collection was changed outside the Removal Random class!");
+                //Debug.LogException(exception);
+                throw exception;
+            }
+            
             do
             {
                 index = Random.Range(0, usedIndexes.Length);
@@ -56,6 +67,24 @@ namespace JayTools.JayRandoms.Instance
             {
                 usedIndexes[i] = false;
             }  
+        }
+        
+        /// <summary>
+        /// Counts not used items.
+        /// </summary>
+        /// <returns>Returns the amount of not used items.</returns>
+        public int ItemsLeft()
+        {
+            int count = 0;
+            for (int i = 0; i < usedIndexes.Length; i++)
+            {
+                if (!usedIndexes[i])
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         /// <summary>

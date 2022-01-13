@@ -11,7 +11,7 @@ namespace JayTools.JayRandoms.Instance
     public class WeightRandom <T> : IRandomDraw<T>
     {
         private readonly List<WeightedItem<T>> items;
-        private int totalWeight = 0;
+        private float totalWeight = 0;
 
         /// <summary>
         /// Constructor of Weight Random
@@ -26,7 +26,7 @@ namespace JayTools.JayRandoms.Instance
         /// </summary>
         /// <param name="item">An item to add.</param>
         /// <param name="weight">A weight of the added item.</param>
-        public void AddItem(T item, int weight)
+        public void AddItem(T item, float weight)
         {
             if (!HasItem(item))
             {
@@ -60,7 +60,7 @@ namespace JayTools.JayRandoms.Instance
         /// </summary>
         /// <param name="item">An item to have its weight changed.</param>
         /// <param name="weight">A new weight for the item.</param>
-        public void SetItemWeight(T item, int weight)
+        public void SetItemWeight(T item, float weight)
         {
             WeightedItem<T> existingItem = GetItem(item);
             if (existingItem != null)
@@ -68,6 +68,7 @@ namespace JayTools.JayRandoms.Instance
                 VerifyWeight(ref weight);
                 totalWeight -= existingItem.Weight;
                 existingItem.Weight = weight;
+                totalWeight += weight;
             }
             else
             {
@@ -81,7 +82,7 @@ namespace JayTools.JayRandoms.Instance
         /// </summary>
         /// <param name="item">An item to have its weight changed.</param>
         /// <param name="weight">An additional weight for the item. Can be negative.</param>
-        public void IncrementItemWeight(T item, int weight)
+        public void IncrementItemWeight(T item, float weight)
         {
             WeightedItem<T> existingItem = GetItem(item);
             if (existingItem != null)
@@ -124,15 +125,15 @@ namespace JayTools.JayRandoms.Instance
         /// <param name="chosenItemWeightChange">A weight added to the item that has been chosen. Can be negative.</param>
         /// <param name="notChosenItemsWeightChange">A weight added to all the items that haven't been chosen. Can be negative.</param>
         /// <returns></returns>
-        public T DrawWithWeightAdjustment(int chosenItemWeightChange, int notChosenItemsWeightChange)
+        public T DrawWithWeightAdjustment(float chosenItemWeightChange, float notChosenItemsWeightChange)
         {
             int index = DrawItemIndex();
 
-            if (chosenItemWeightChange != 0 || notChosenItemsWeightChange != 0)
+            if (chosenItemWeightChange != 0f || notChosenItemsWeightChange != 0f)
             {
                 for (var i = 0; i < items.Count; i++)
                 {
-                    int change = index == i ? chosenItemWeightChange : notChosenItemsWeightChange;
+                    float change = index == i ? chosenItemWeightChange : notChosenItemsWeightChange;
                     IncrementWeight(items[i], change);
                 }
 
@@ -156,9 +157,9 @@ namespace JayTools.JayRandoms.Instance
                 return -1;
             }
             
-            int random = Static.JayRandom.Random(0, totalWeight);
+            float random = Static.JayRandom.Random(0, totalWeight);
             
-            for (var i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i++)
             {
                 random -= items[i].Weight;
 
@@ -175,7 +176,7 @@ namespace JayTools.JayRandoms.Instance
         /// Verifies if the given weight is positive. Changes its value to zero if not.
         /// </summary>
         /// <param name="weight">A weight to verify.</param>
-        private void VerifyWeight(ref int weight)
+        private void VerifyWeight(ref float weight)
         {
             if (weight < 0)
             {
@@ -210,7 +211,7 @@ namespace JayTools.JayRandoms.Instance
         /// </summary>
         /// <param name="item">An item to be searched for in the collection.</param>
         /// <returns></returns>
-        private WeightedItem<T> GetItem(T item)
+        public WeightedItem<T> GetItem(T item)
         {
             int count = items.Count;
             
@@ -231,7 +232,7 @@ namespace JayTools.JayRandoms.Instance
         /// </summary>
         /// <param name="item">An item to have its weight changed.</param>
         /// <param name="relativeWeightChange">An additional weight for the item. Can be negative.</param>
-        private void IncrementWeight(WeightedItem<T> item, int relativeWeightChange)
+        private void IncrementWeight(WeightedItem<T> item, float relativeWeightChange)
         {
             totalWeight -= item.Weight;
             item.Weight += relativeWeightChange;
